@@ -23,20 +23,22 @@ const SI_PREFIXES: Readonly<Record<string, Prefix>> = {
     yocto: { value: 1e-24, abbreviation: "y", key: "yocto" },
 } as const
 
-type Unit = { value: number; abbreviation: string; si?: true }
+type Unit = { value: number; abbreviation: string; plural: string; si?: true }
 
 const LENGTH_UNITS: Readonly<Record<string, Unit>> = {
-    meter: { value: 1, abbreviation: "m", si: true },
-    inch: { value: 0.0254, abbreviation: "in" },
-    foot: { value: 0.3048, abbreviation: "ft" },
-    yard: { value: 0.9144, abbreviation: "yd" },
-    mile: { value: 1609.344, abbreviation: "mi" },
+    meter: { value: 1, abbreviation: "m", plural: "meters", si: true },
+    inch: { value: 0.0254, abbreviation: "in", plural: "inches" },
+    foot: { value: 0.3048, abbreviation: "ft", plural: "feet" },
+    yard: { value: 0.9144, abbreviation: "yd", plural: "yard" },
+    mile: { value: 1609.344, abbreviation: "mi", plural: "miles" },
 } as const
 
 const LENGTH_UNITS_WITH_PLURALS: Record<string, Unit> = { ...LENGTH_UNITS }
 
 for (const [unitName, unit] of Object.entries(LENGTH_UNITS)) {
     LENGTH_UNITS_WITH_PLURALS[unitName + "s"] = unit
+    LENGTH_UNITS_WITH_PLURALS[unit.abbreviation] = unit
+    LENGTH_UNITS_WITH_PLURALS[unit.plural] = unit
 }
 
 type PrefixedUnit = { prefix?: Prefix; unit: Unit }
@@ -95,6 +97,14 @@ test("parse meters, plural", () => {
     expect(parseUnit("meters").unit).toBe(LENGTH_UNITS.meter)
 })
 
+test("parse inches, plural", () => {
+    expect(parseUnit("inches").unit).toBe(LENGTH_UNITS.inch)
+})
+
 test("parse metery should throw", () => {
     expect(() => parseUnit("metery")).toThrow()
+})
+
+test("parse abbriviated unit m", () => {
+    expect(parseUnit("m").unit).toBe(LENGTH_UNITS.meter)
 })
