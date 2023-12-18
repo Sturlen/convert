@@ -1,6 +1,6 @@
 type Prefix = { value: number; abbreviation: string; key: string }
 
-const SI_PREFIXES: Record<string, Prefix> = {
+const SI_PREFIXES: Readonly<Record<string, Prefix>> = {
     yotta: { value: 1e24, abbreviation: "Y", key: "yotta" },
     zetta: { value: 1e21, abbreviation: "Z", key: "zetta" },
     exa: { value: 1e18, abbreviation: "E", key: "exa" },
@@ -25,13 +25,19 @@ const SI_PREFIXES: Record<string, Prefix> = {
 
 type Unit = { value: number; abbreviation: string; si?: true }
 
-const LENGTH_UNITS: Record<string, Unit> = {
+const LENGTH_UNITS: Readonly<Record<string, Unit>> = {
     meter: { value: 1, abbreviation: "m", si: true },
     inch: { value: 0.0254, abbreviation: "in" },
     foot: { value: 0.3048, abbreviation: "ft" },
     yard: { value: 0.9144, abbreviation: "yd" },
     mile: { value: 1609.344, abbreviation: "mi" },
 } as const
+
+const LENGTH_UNITS_WITH_PLURALS: Record<string, Unit> = { ...LENGTH_UNITS }
+
+for (const [unitName, unit] of Object.entries(LENGTH_UNITS)) {
+    LENGTH_UNITS_WITH_PLURALS[unitName + "s"] = unit
+}
 
 type PrefixedUnit = { prefix?: Prefix; unit: Unit }
 
@@ -44,10 +50,15 @@ function findPrefix(input: string): Prefix | undefined {
     }
 }
 
+function findUnitWithOrWithoutPlurals(input: string): Unit | undefined {
+    return LENGTH_UNITS_WITH_PLURALS[input]
+}
+
 function parseUnit(input: string): PrefixedUnit {
+    const found_unit = findUnitWithOrWithoutPlurals(input)
     const found_prefix = findPrefix(input)
-    if (LENGTH_UNITS[input]) {
-        return { unit: LENGTH_UNITS[input] }
+    if (found_unit) {
+        return { unit: found_unit }
     } else if (found_prefix) {
         const unit_string = input.slice(found_prefix.key.length)
         const unit = LENGTH_UNITS[unit_string]
@@ -78,4 +89,12 @@ test("parse millimeter", () => {
     const { unit, prefix } = parseUnit("millimeter")
     expect(unit).toBe(LENGTH_UNITS.meter)
     expect(prefix).toBe(SI_PREFIXES.milli)
+})
+
+test("parse meters, plural", () => {
+    expect(parseUnit("meters").unit).toBe(LENGTH_UNITS.meter)
+})
+
+test("parse metery should throw", () => {
+    expect(() => parseUnit("metery")).toThrow()
 })
