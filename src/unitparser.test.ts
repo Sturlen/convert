@@ -75,8 +75,8 @@ test("parse meter", () => {
     expect(parseUnit("meter").unit).toBe(LENGTH_UNITS.meter)
 })
 
-test("parse inch", () => {
-    expect(parseUnit("inch").unit).toBe(LENGTH_UNITS.inch)
+test("throw if unit is invalid", () => {
+    expect(() => parseUnit("truckload")).toThrow()
 })
 
 test("parse kilometer", () => {
