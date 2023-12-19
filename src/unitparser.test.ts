@@ -108,3 +108,7 @@ test("parse metery should throw", () => {
 test("parse abbriviated unit m", () => {
     expect(parseUnit("m").unit).toBe(LENGTH_UNITS.meter)
 })
+
+test("parse abbriviated inches", () => {
+    expect(parseUnit("in").unit).toBe(LENGTH_UNITS.inch)
+})
