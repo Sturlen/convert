@@ -13,7 +13,7 @@
         "dev": "tsx ./src/index.ts",
         "test": "jest",
         "prepublish": "npm run build",
-        "publish": "npm publish --access public"
+        "pub": "pnpm publish --access public"
     },
     "keywords": [
         "units",
