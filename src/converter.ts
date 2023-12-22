@@ -30,22 +30,22 @@ export type Unit = {
     si?: true
 }
 
-export const LENGTH_UNITS: Readonly<Record<string, Unit>> = {
+export const LENGTH_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     meter: { value: 1, abbreviation: "m", plural: "meters", si: true },
     inch: { value: 0.0254, abbreviation: "in", plural: "inches" },
     foot: { value: 0.3048, abbreviation: "ft", plural: "feet" },
-    yard: { value: 0.9144, abbreviation: "yd", plural: "yard" },
+    yard: { value: 0.9144, abbreviation: "yd", plural: "yards" },
     mile: { value: 1609.344, abbreviation: "mi", plural: "miles" },
 } as const
 
-export const LENGTH_UNITS_WITH_PLURALS: Record<string, Unit> = {
-    ...LENGTH_UNITS,
+export const LENGTH_UNITS: Record<string, Unit> = {
+    ...LENGTH_SINGLE_UNITS,
 }
 
-for (const [unitName, unit] of Object.entries(LENGTH_UNITS)) {
-    LENGTH_UNITS_WITH_PLURALS[unitName + "s"] = unit
-    LENGTH_UNITS_WITH_PLURALS[unit.abbreviation] = unit
-    LENGTH_UNITS_WITH_PLURALS[unit.plural] = unit
+for (const [unitName, unit] of Object.entries(LENGTH_SINGLE_UNITS)) {
+    LENGTH_UNITS[unitName + "s"] = unit
+    LENGTH_UNITS[unit.abbreviation] = unit
+    LENGTH_UNITS[unit.plural] = unit
 }
 
 export type PrefixedUnit = { prefix?: Prefix; unit: Unit }
@@ -60,7 +60,7 @@ function findPrefix(input: string): Prefix | undefined {
 }
 
 function findUnitWithOrWithoutPlurals(input: string): Unit | undefined {
-    return LENGTH_UNITS_WITH_PLURALS[input]
+    return LENGTH_UNITS[input]
 }
 
 export function parseUnit(input: string): PrefixedUnit {
