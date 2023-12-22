@@ -2,7 +2,7 @@
 Syntax:
 
 ```bash
-npx @sturlen/convert AMOUNT FROMUNIT TOUNIT
+npx @sturlen/convert AMOUNT FROM TO
 ```
 
 
@@ -21,3 +21,4 @@ Supports SI-prefixes, singular, plural and abbreviations. e.g. `kilometer, kilom
 - More quantities
 - Library version
 - Better precision
+- Help command
