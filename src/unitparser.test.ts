@@ -73,6 +73,12 @@ function parseUnit(input: string): PrefixedUnit {
     }
 }
 
+function convert(amount: number, from: PrefixedUnit, to: PrefixedUnit): number {
+    const factor_from = (from.prefix?.value ?? 1) * from.unit.value
+    const factor_to = (to.prefix?.value ?? 1) * to.unit.value
+    return (amount * factor_from) / factor_to
+}
+
 test("parse meter", () => {
     expect(parseUnit("meter").unit).toBe(LENGTH_UNITS.meter)
 })
@@ -111,4 +117,14 @@ test("parse abbriviated unit m", () => {
 
 test("parse abbriviated inches", () => {
     expect(parseUnit("in").unit).toBe(LENGTH_UNITS.inch)
+})
+
+test("1 kilometer should convert to 1000 meters", () => {
+    const meters = convert(1, parseUnit("kilometer"), parseUnit("meter"))
+    expect(meters).toBe(1000)
+})
+
+test("1000 meters should convert to 1 kilometer", () => {
+    const kilometers = convert(1000, parseUnit("meter"), parseUnit("kilometer"))
+    expect(kilometers).toBe(1)
 })
