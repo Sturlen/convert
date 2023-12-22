@@ -1,9 +1,15 @@
 import { convertUnit } from "./converter"
 
-test("parse meters", () => {
+test("parse meter, meters and m", () => {
     expect(convertUnit(1, "m", "m")).toBe(1)
     expect(convertUnit(1, "meter", "meter")).toBe(1)
     expect(convertUnit(1, "meters", "meters")).toBe(1)
+})
+
+test("parse kilometer, kilometers and km", () => {
+    expect(convertUnit(1, "km", "km")).toBe(1)
+    expect(convertUnit(1, "kilometer", "kilometer")).toBe(1)
+    expect(convertUnit(1, "kilometers", "kilometers")).toBe(1)
 })
 
 test("12 inches should convert to 1 foot", () => {
