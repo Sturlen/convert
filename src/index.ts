@@ -1,3 +1,5 @@
+#!/bin/env node
+
 import { convertUnit } from "./converter"
 
 const quantities = [
