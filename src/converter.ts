@@ -59,6 +59,15 @@ function findPrefix(input: string): Prefix | undefined {
     }
 }
 
+function findAbbrivatedPrefix(input: string): Prefix | undefined {
+    const prefix_entry = Object.entries(SI_PREFIXES).find(
+        ([_, { abbreviation }]) => input.startsWith(abbreviation)
+    )
+    if (prefix_entry) {
+        return prefix_entry[1]
+    }
+}
+
 function findUnitWithOrWithoutPlurals(input: string): Unit | undefined {
     return LENGTH_UNITS[input]
 }
@@ -66,15 +75,25 @@ function findUnitWithOrWithoutPlurals(input: string): Unit | undefined {
 export function parseUnit(input: string): PrefixedUnit {
     const found_unit = findUnitWithOrWithoutPlurals(input)
     const found_prefix = findPrefix(input)
+    const found_abbrivated_prefix = findAbbrivatedPrefix(input)
     if (found_unit) {
         return { unit: found_unit }
     } else if (found_prefix) {
         const unit_string = input.slice(found_prefix.key.length)
         const unit = LENGTH_UNITS[unit_string]
         if (!unit) {
-            throw new Error(`Unknown unit: ${unit_string}`)
+            throw new Error(`Unknown prefixed unit: ${unit_string}`)
         }
         return { prefix: found_prefix, unit: LENGTH_UNITS.meter }
+    } else if (found_abbrivated_prefix) {
+        const unit_string = input.slice(
+            found_abbrivated_prefix.abbreviation.length
+        )
+        const unit = LENGTH_UNITS[unit_string]
+        if (!unit) {
+            throw new Error(`Unknown abbreviated prefixed unit: ${unit_string}`)
+        }
+        return { prefix: found_abbrivated_prefix, unit: LENGTH_UNITS.meter }
     } else {
         throw new Error(`Unknown unit: ${input}`)
     }

@@ -36,6 +36,12 @@ test("parse abbriviated unit m", () => {
     expect(parseUnit("m").unit).toBe(LENGTH_UNITS.meter)
 })
 
+test("parse abbriviated unit km", () => {
+    const { unit, prefix } = parseUnit("km")
+    expect(unit).toBe(LENGTH_UNITS.meter)
+    expect(prefix).toBe(SI_PREFIXES.kilo)
+})
+
 test("parse abbriviated inches", () => {
     expect(parseUnit("in").unit).toBe(LENGTH_UNITS.inch)
 })
