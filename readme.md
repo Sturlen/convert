@@ -1,11 +1,15 @@
 # Convert
-```bash
-npx @sturlen/convert 12 inches feet
-1
-```
+Syntax:
 
 ```bash
-npx @sturlen/convert 1 km miles
+npx @sturlen/convert AMOUNT FROMUNIT TOUNIT
+```
+
+
+Example:
+
+```bash
+npx @sturlen/convert 1 kilometer miles
 0.6
 ```
 
