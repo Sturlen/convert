@@ -11,7 +11,6 @@ const quantities = [
 ] as const
 
 function main(args: string[]) {
-    console.log(args)
     const [value, unit_in, unit_out] = args
 
     const value_in = parseFloat(value)
