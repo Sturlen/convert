@@ -89,3 +89,9 @@ export function convert(
     const factor_to = (to.prefix?.value ?? 1) * to.unit.value
     return (amount * factor_from) / factor_to
 }
+
+export function convertUnit(amount: number, from: string, to: string): number {
+    const from_unit = parseUnit(from)
+    const to_unit = parseUnit(to)
+    return convert(amount, from_unit, to_unit)
+}
