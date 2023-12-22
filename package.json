@@ -11,13 +11,19 @@
         "convert": "node ./dist/index.cjs",
         "build": "tsup ./src/index.ts",
         "dev": "tsx ./src/index.ts",
-        "test": "jest"
+        "test": "jest",
+        "prepublish": "npm run build",
+        "publish": "npm publish --access public"
     },
     "keywords": [
-        "Units",
-        "Conversion"
+        "units",
+        "conversion",
+        "cli"
     ],
     "author": "Sturlen",
+    "files": [
+        "/dist"
+    ],
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
