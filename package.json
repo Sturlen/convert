@@ -1,17 +1,26 @@
 {
     "name": "convert",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "description": "CLI Unit Conversion Tool",
+    "main": "./dist/index.cjs",
     "type": "module",
+    "bin": {
+        "convert": "./dist/index.cjs"
+    },
     "scripts": {
         "convert": "tsx ./src/index.ts",
+        "build": "tsup ./src/index.ts",
+        "convert:bin": "node ./dist/index.cjs",
         "test": "jest"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "keywords": [
+        "Units",
+        "Conversion"
+    ],
+    "author": "Sturlen",
+    "license": "MIT",
     "dependencies": {
+        "tsup": "^8.0.1",
         "tsx": "^4.6.2"
     },
     "devDependencies": {
