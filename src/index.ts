@@ -20,7 +20,7 @@ function main(args: string[]) {
 
     const result = convertUnit(value_in, unit_in, unit_out)
 
-    stdout.write(result.toString())
+    stdout.write(result.toString() + "\n")
     exit()
 }
 
