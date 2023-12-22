@@ -38,79 +38,52 @@ export const LENGTH_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     mile: { value: 1609.344, abbreviation: "mi", plural: "miles" },
 } as const
 
-export const LENGTH_UNITS: Record<string, Unit> = {
-    ...LENGTH_SINGLE_UNITS,
-}
+export type CoreUnit = { factor: number; coreId: string }
+
+export const UNITS_TABLE = new Map<string, CoreUnit>()
 
 for (const [unitName, unit] of Object.entries(LENGTH_SINGLE_UNITS)) {
-    LENGTH_UNITS[unitName + "s"] = unit
-    LENGTH_UNITS[unit.abbreviation] = unit
-    LENGTH_UNITS[unit.plural] = unit
-}
-
-export type PrefixedUnit = { prefix?: Prefix; unit: Unit }
-
-function findPrefix(input: string): Prefix | undefined {
-    const prefix_entry = Object.entries(SI_PREFIXES).find(([prefixName]) =>
-        input.startsWith(prefixName)
-    )
-    if (prefix_entry) {
-        return prefix_entry[1]
+    UNITS_TABLE.set(unitName, {
+        factor: unit.value,
+        coreId: unitName,
+    })
+    UNITS_TABLE.set(unit.plural, {
+        factor: unit.value,
+        coreId: unitName,
+    })
+    UNITS_TABLE.set(unit.abbreviation, {
+        factor: unit.value,
+        coreId: unitName,
+    })
+    if (unit.si) {
+        Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
+            UNITS_TABLE.set(prefixName + unitName, {
+                factor: unit.value * prefix.value,
+                coreId: `${prefixName}-${unitName}`,
+            })
+            UNITS_TABLE.set(prefixName + unit.plural, {
+                factor: unit.value * prefix.value,
+                coreId: `${prefixName}-${unitName}`,
+            })
+            UNITS_TABLE.set(prefix.abbreviation + unit.abbreviation, {
+                factor: unit.value * prefix.value,
+                coreId: `${prefixName}-${unitName}`,
+            })
+        })
     }
-}
-
-function findAbbrivatedPrefix(input: string): Prefix | undefined {
-    const prefix_entry = Object.entries(SI_PREFIXES).find(
-        ([_, { abbreviation }]) => input.startsWith(abbreviation)
-    )
-    if (prefix_entry) {
-        return prefix_entry[1]
-    }
-}
-
-function findUnitWithOrWithoutPlurals(input: string): Unit | undefined {
-    return LENGTH_UNITS[input]
-}
-
-export function parseUnit(input: string): PrefixedUnit {
-    const found_unit = findUnitWithOrWithoutPlurals(input)
-    const found_prefix = findPrefix(input)
-    const found_abbrivated_prefix = findAbbrivatedPrefix(input)
-    if (found_unit) {
-        return { unit: found_unit }
-    } else if (found_prefix) {
-        const unit_string = input.slice(found_prefix.key.length)
-        const unit = LENGTH_UNITS[unit_string]
-        if (!unit) {
-            throw new Error(`Unknown prefixed unit: ${unit_string}`)
-        }
-        return { prefix: found_prefix, unit: LENGTH_UNITS.meter }
-    } else if (found_abbrivated_prefix) {
-        const unit_string = input.slice(
-            found_abbrivated_prefix.abbreviation.length
-        )
-        const unit = LENGTH_UNITS[unit_string]
-        if (!unit) {
-            throw new Error(`Unknown abbreviated prefixed unit: ${unit_string}`)
-        }
-        return { prefix: found_abbrivated_prefix, unit: LENGTH_UNITS.meter }
-    } else {
-        throw new Error(`Unknown unit: ${input}`)
-    }
-}
-
-export function convert(
-    amount: number,
-    from: PrefixedUnit,
-    to: PrefixedUnit
-): number {
-    const factor_from = (from.prefix?.value ?? 1) * from.unit.value
-    const factor_to = (to.prefix?.value ?? 1) * to.unit.value
-    return (amount * factor_from) / factor_to
 }
 
 export function convertUnit(amount: number, from: string, to: string): number {
-    const from_unit = parseUnit(from)
-    const to_unit = parseUnit(to)
-    return convert(amount, from_unit, to_unit)
+    const from_unit = UNITS_TABLE.get(from)?.factor
+    const to_unit = UNITS_TABLE.get(to)?.factor
+
+    if (from_unit === undefined) {
+        throw new Error(`Unknown unit: ${from}`)
+    }
+
+    if (to_unit === undefined) {
+        throw new Error(`Unknown unit: ${to}`)
+    }
+
+    return (amount * from_unit) / to_unit
 }

@@ -1,4 +1,4 @@
-import { convert, convertUnit } from "./converter"
+import { convertUnit } from "./converter"
 
 const quantities = [
     "Length",
