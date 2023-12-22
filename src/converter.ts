@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 export type Prefix = { value: number; abbreviation: string; key: string }
 
 export const SI_PREFIXES: Readonly<Record<string, Prefix>> = {
