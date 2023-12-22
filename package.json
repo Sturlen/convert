@@ -25,6 +25,7 @@
         "/dist"
     ],
     "license": "MIT",
+    "repository": "https://github.com/Sturlen/convert/",
     "dependencies": {},
     "devDependencies": {
         "tsup": "^8.0.1",
