@@ -17,6 +17,10 @@ test("12 inches should convert to 1 foot", () => {
     expect(convertUnit(1, "foot", "in")).toBeCloseTo(12)
 })
 
+test("1 kg should be 2.2 lbs", () => {
+    expect(convertUnit(1, "kg", "lb")).toBeCloseTo(2.2)
+})
+
 test("1 kilometer should convert to 1000 meters", () => {
     expect(convertUnit(1, "kilometer", "meter")).toBe(1000)
 })

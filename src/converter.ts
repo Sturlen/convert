@@ -38,40 +38,51 @@ export const LENGTH_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     mile: { value: 1609.344, abbreviation: "mi", plural: "miles" },
 } as const
 
+// 1 pound = 453.59237 grams
+export const WEIGHT_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
+    gram: { value: 1, abbreviation: "g", plural: "grams", si: true },
+    pound: { value: 453.59237, abbreviation: "lb", plural: "pounds" },
+} as const
+
 export type CoreUnit = { factor: number; coreId: string }
 
 export const UNITS_TABLE = new Map<string, CoreUnit>()
 
-for (const [unitName, unit] of Object.entries(LENGTH_SINGLE_UNITS)) {
-    UNITS_TABLE.set(unitName, {
-        factor: unit.value,
-        coreId: unitName,
-    })
-    UNITS_TABLE.set(unit.plural, {
-        factor: unit.value,
-        coreId: unitName,
-    })
-    UNITS_TABLE.set(unit.abbreviation, {
-        factor: unit.value,
-        coreId: unitName,
-    })
-    if (unit.si) {
-        Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
-            UNITS_TABLE.set(prefixName + unitName, {
-                factor: unit.value * prefix.value,
-                coreId: `${prefixName}-${unitName}`,
-            })
-            UNITS_TABLE.set(prefixName + unit.plural, {
-                factor: unit.value * prefix.value,
-                coreId: `${prefixName}-${unitName}`,
-            })
-            UNITS_TABLE.set(prefix.abbreviation + unit.abbreviation, {
-                factor: unit.value * prefix.value,
-                coreId: `${prefixName}-${unitName}`,
-            })
+function addUnitsToTable(units: Readonly<Record<string, Unit>>) {
+    for (const [unitName, unit] of Object.entries(units)) {
+        UNITS_TABLE.set(unitName, {
+            factor: unit.value,
+            coreId: unitName,
         })
+        UNITS_TABLE.set(unit.plural, {
+            factor: unit.value,
+            coreId: unitName,
+        })
+        UNITS_TABLE.set(unit.abbreviation, {
+            factor: unit.value,
+            coreId: unitName,
+        })
+        if (unit.si) {
+            Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
+                UNITS_TABLE.set(prefixName + unitName, {
+                    factor: unit.value * prefix.value,
+                    coreId: `${prefixName}-${unitName}`,
+                })
+                UNITS_TABLE.set(prefixName + unit.plural, {
+                    factor: unit.value * prefix.value,
+                    coreId: `${prefixName}-${unitName}`,
+                })
+                UNITS_TABLE.set(prefix.abbreviation + unit.abbreviation, {
+                    factor: unit.value * prefix.value,
+                    coreId: `${prefixName}-${unitName}`,
+                })
+            })
+        }
     }
 }
+
+addUnitsToTable(LENGTH_SINGLE_UNITS)
+addUnitsToTable(WEIGHT_SINGLE_UNITS)
 
 export function convertUnit(amount: number, from: string, to: string): number {
     const from_unit = UNITS_TABLE.get(from)?.factor
