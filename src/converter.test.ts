@@ -32,3 +32,7 @@ test("1000 meters should convert to 1 kilometer", () => {
 test("should throw if units are invalid", () => {
     expect(() => convertUnit(1000, "trucktons", "kilometer")).toThrow()
 })
+
+test("should throw if units are not of the same quantity", () => {
+    expect(() => convertUnit(1, "meter", "kilogram")).toThrow()
+})

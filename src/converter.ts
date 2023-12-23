@@ -39,56 +39,59 @@ export const LENGTH_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
 } as const
 
 // 1 pound = 453.59237 grams
-export const WEIGHT_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
+export const MASS_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     gram: { value: 1, abbreviation: "g", plural: "grams", si: true },
     ounce: { value: 28.3495231, abbreviation: "oz", plural: "ounces" },
     pound: { value: 453.59237, abbreviation: "lb", plural: "pounds" },
     ton: { value: 907184.74, abbreviation: "t", plural: "tons" },
 } as const
 
-export type CoreUnit = { factor: number; coreId: string }
+export type CoreUnit = { factor: number; quantity: string }
 
 export const UNITS_TABLE = new Map<string, CoreUnit>()
 
-function addUnitsToTable(units: Readonly<Record<string, Unit>>) {
+function addUnitsToTable(
+    units: Readonly<Record<string, Unit>>,
+    quantity: string
+) {
     for (const [unitName, unit] of Object.entries(units)) {
         UNITS_TABLE.set(unitName, {
             factor: unit.value,
-            coreId: unitName,
+            quantity,
         })
         UNITS_TABLE.set(unit.plural, {
             factor: unit.value,
-            coreId: unitName,
+            quantity,
         })
         UNITS_TABLE.set(unit.abbreviation, {
             factor: unit.value,
-            coreId: unitName,
+            quantity,
         })
         if (unit.si) {
             Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
                 UNITS_TABLE.set(prefixName + unitName, {
                     factor: unit.value * prefix.value,
-                    coreId: `${prefixName}-${unitName}`,
+                    quantity,
                 })
                 UNITS_TABLE.set(prefixName + unit.plural, {
                     factor: unit.value * prefix.value,
-                    coreId: `${prefixName}-${unitName}`,
+                    quantity,
                 })
                 UNITS_TABLE.set(prefix.abbreviation + unit.abbreviation, {
                     factor: unit.value * prefix.value,
-                    coreId: `${prefixName}-${unitName}`,
+                    quantity,
                 })
             })
         }
     }
 }
 
-addUnitsToTable(LENGTH_SINGLE_UNITS)
-addUnitsToTable(WEIGHT_SINGLE_UNITS)
+addUnitsToTable(LENGTH_SINGLE_UNITS, "Length")
+addUnitsToTable(MASS_SINGLE_UNITS, "Mass")
 
 export function convertUnit(amount: number, from: string, to: string): number {
-    const from_unit = UNITS_TABLE.get(from)?.factor
-    const to_unit = UNITS_TABLE.get(to)?.factor
+    const from_unit = UNITS_TABLE.get(from)
+    const to_unit = UNITS_TABLE.get(to)
 
     if (from_unit === undefined) {
         throw new Error(`Unknown unit: ${from}`)
@@ -98,5 +101,11 @@ export function convertUnit(amount: number, from: string, to: string): number {
         throw new Error(`Unknown unit: ${to}`)
     }
 
-    return (amount * from_unit) / to_unit
+    if (from_unit.quantity !== to_unit.quantity) {
+        throw new Error(
+            `Cannot convert "${from}" (${from_unit.quantity}) to "${to}" (${to_unit.quantity})`
+        )
+    }
+
+    return (amount * from_unit.factor) / to_unit.factor
 }
