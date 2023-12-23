@@ -41,7 +41,9 @@ export const LENGTH_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
 // 1 pound = 453.59237 grams
 export const WEIGHT_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     gram: { value: 1, abbreviation: "g", plural: "grams", si: true },
+    ounce: { value: 28.3495231, abbreviation: "oz", plural: "ounces" },
     pound: { value: 453.59237, abbreviation: "lb", plural: "pounds" },
+    ton: { value: 907184.74, abbreviation: "t", plural: "tons" },
 } as const
 
 export type CoreUnit = { factor: number; coreId: string }
