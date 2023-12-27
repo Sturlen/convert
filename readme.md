@@ -55,6 +55,7 @@ All SI-units support the following prefixes:
 ## Temperature
 - kelvin
 - celsius
+- fahrenheit
 
 # Todo
 - More quantities

@@ -50,6 +50,12 @@ export const MASS_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
 export const TEMP_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     kelvin: { value: 1, abbreviation: "K", plural: "K" },
     celsius: { value: 1, zero: -273.15, abbreviation: "C", plural: "°C" },
+    fahrenheit: {
+        value: 5 / 9,
+        zero: -459.67,
+        abbreviation: "F",
+        plural: "°F",
+    },
 } as const
 
 export type CoreUnit = { factor: number; quantity: string; zero: number }

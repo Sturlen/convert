@@ -43,3 +43,10 @@ test("kelvin to celsius", () => {
     expect(convertUnit(0, "celsius", "kelvin")).toBeCloseTo(273.15)
     expect(convertUnit(1, "celsius", "kelvin")).toBeCloseTo(274.15)
 })
+
+test("fahrenheit", () => {
+    expect(convertUnit(0, "kelvin", "fahrenheit")).toBeCloseTo(-459.67)
+    expect(convertUnit(1, "kelvin", "fahrenheit")).toBeCloseTo(-457.87)
+    expect(convertUnit(0, "celsius", "fahrenheit")).toBeCloseTo(32)
+    expect(convertUnit(1, "celsius", "fahrenheit")).toBeCloseTo(33.8)
+})
