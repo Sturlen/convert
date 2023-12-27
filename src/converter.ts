@@ -25,6 +25,7 @@ export const SI_PREFIXES: Readonly<Record<string, Prefix>> = {
 
 export type Unit = {
     value: number
+    zero?: number
     abbreviation: string
     plural: string
     si?: true
@@ -46,7 +47,12 @@ export const MASS_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
     ton: { value: 907184.74, abbreviation: "t", plural: "tons" },
 } as const
 
-export type CoreUnit = { factor: number; quantity: string }
+export const TEMP_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
+    kelvin: { value: 1, abbreviation: "K", plural: "K" },
+    celsius: { value: 1, zero: -273.15, abbreviation: "C", plural: "°C" },
+} as const
+
+export type CoreUnit = { factor: number; quantity: string; zero: number }
 
 export const UNITS_TABLE = new Map<string, CoreUnit>()
 
@@ -57,28 +63,34 @@ function addUnitsToTable(
     for (const [unitName, unit] of Object.entries(units)) {
         UNITS_TABLE.set(unitName, {
             factor: unit.value,
+            zero: unit.zero ?? 0,
             quantity,
         })
         UNITS_TABLE.set(unit.plural, {
             factor: unit.value,
+            zero: unit.zero ?? 0,
             quantity,
         })
         UNITS_TABLE.set(unit.abbreviation, {
             factor: unit.value,
+            zero: unit.zero ?? 0,
             quantity,
         })
         if (unit.si) {
             Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
                 UNITS_TABLE.set(prefixName + unitName, {
                     factor: unit.value * prefix.value,
+                    zero: unit.zero ?? 0,
                     quantity,
                 })
                 UNITS_TABLE.set(prefixName + unit.plural, {
                     factor: unit.value * prefix.value,
+                    zero: unit.zero ?? 0,
                     quantity,
                 })
                 UNITS_TABLE.set(prefix.abbreviation + unit.abbreviation, {
                     factor: unit.value * prefix.value,
+                    zero: unit.zero ?? 0,
                     quantity,
                 })
             })
@@ -88,6 +100,7 @@ function addUnitsToTable(
 
 addUnitsToTable(LENGTH_SINGLE_UNITS, "Length")
 addUnitsToTable(MASS_SINGLE_UNITS, "Mass")
+addUnitsToTable(TEMP_SINGLE_UNITS, "Temperature")
 
 export function convertUnit(amount: number, from: string, to: string): number {
     const from_unit = UNITS_TABLE.get(from)
@@ -107,5 +120,8 @@ export function convertUnit(amount: number, from: string, to: string): number {
         )
     }
 
-    return (amount * from_unit.factor) / to_unit.factor
+    const from_zero = from_unit.zero
+    const to_zero = to_unit.zero
+
+    return ((amount - from_zero) * from_unit.factor) / to_unit.factor + to_zero
 }

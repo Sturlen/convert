@@ -52,6 +52,10 @@ All SI-units support the following prefixes:
 - gram
 - pound
 
+## Temperature
+- kelvin
+- celsius
+
 # Todo
 - More quantities
 - Library version

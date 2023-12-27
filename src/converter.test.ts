@@ -36,3 +36,10 @@ test("should throw if units are invalid", () => {
 test("should throw if units are not of the same quantity", () => {
     expect(() => convertUnit(1, "meter", "kilogram")).toThrow()
 })
+
+test("kelvin to celsius", () => {
+    expect(convertUnit(0, "kelvin", "celsius")).toBeCloseTo(-273.15)
+    expect(convertUnit(1, "kelvin", "celsius")).toBeCloseTo(-272.15)
+    expect(convertUnit(0, "celsius", "kelvin")).toBeCloseTo(273.15)
+    expect(convertUnit(1, "celsius", "kelvin")).toBeCloseTo(274.15)
+})
