@@ -24,6 +24,7 @@ export const SI_PREFIXES: Readonly<Prefix[]> = [
 ]
 
 export type Unit = {
+    key: string
     value: number
     zero?: number
     abbreviation: string
@@ -31,32 +32,40 @@ export type Unit = {
     si?: true
 }
 
-export const LENGTH_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
-    meter: { value: 1, abbreviation: "m", plural: "meters", si: true },
-    inch: { value: 0.0254, abbreviation: "in", plural: "inches" },
-    foot: { value: 0.3048, abbreviation: "ft", plural: "feet" },
-    yard: { value: 0.9144, abbreviation: "yd", plural: "yards" },
-    mile: { value: 1609.344, abbreviation: "mi", plural: "miles" },
-} as const
+export type UnitTable = Readonly<Array<Unit>>
 
+export const LENGTH_SINGLE_UNITS: UnitTable = [
+    { key: "meter", value: 1, abbreviation: "m", plural: "meters", si: true },
+    { key: "inch", value: 0.0254, abbreviation: "in", plural: "inches" },
+    { key: "foot", value: 0.3048, abbreviation: "ft", plural: "feet" },
+    { key: "yard", value: 0.9144, abbreviation: "yd", plural: "yards" },
+    { key: "mile", value: 1609.344, abbreviation: "mi", plural: "miles" },
+]
 // 1 pound = 453.59237 grams
-export const MASS_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
-    gram: { value: 1, abbreviation: "g", plural: "grams", si: true },
-    ounce: { value: 28.3495231, abbreviation: "oz", plural: "ounces" },
-    pound: { value: 453.59237, abbreviation: "lb", plural: "pounds" },
-    ton: { value: 907184.74, abbreviation: "t", plural: "tons" },
-} as const
+export const MASS_SINGLE_UNITS: UnitTable = [
+    { key: "gram", value: 1, abbreviation: "g", plural: "grams", si: true },
+    { key: "ounce", value: 28.3495231, abbreviation: "oz", plural: "ounces" },
+    { key: "pound", value: 453.59237, abbreviation: "lb", plural: "pounds" },
+    { key: "ton", value: 907184.74, abbreviation: "t", plural: "tons" },
+]
 
-export const TEMP_SINGLE_UNITS: Readonly<Record<string, Unit>> = {
-    kelvin: { value: 1, abbreviation: "K", plural: "K" },
-    celsius: { value: 1, zero: -273.15, abbreviation: "C", plural: "°C" },
-    fahrenheit: {
+export const TEMP_SINGLE_UNITS: UnitTable = [
+    { key: "kelvin", value: 1, abbreviation: "K", plural: "K" },
+    {
+        key: "celsius",
+        value: 1,
+        zero: -273.15,
+        abbreviation: "C",
+        plural: "°C",
+    },
+    {
+        key: "fahrenheit",
         value: 5 / 9,
         zero: -459.67,
         abbreviation: "F",
         plural: "°F",
     },
-} as const
+]
 
 export type CoreUnit = { factor: number; quantity: string; zero: number }
 
@@ -77,13 +86,10 @@ function setMultipleKeys(
     }
 }
 
-function addUnitsToTable(
-    units: Readonly<Record<string, Unit>>,
-    quantity: string
-) {
-    for (const [unitName, unit] of Object.entries(units)) {
+function addUnitsToTable(units: UnitTable, quantity: string) {
+    units.forEach((unit) => {
         setMultipleKeys(
-            [unitName, unit.plural, unit.abbreviation],
+            [unit.key, unit.plural, unit.abbreviation],
             unit,
             quantity
         )
@@ -92,7 +98,7 @@ function addUnitsToTable(
             SI_PREFIXES.forEach((prefix) => {
                 setMultipleKeys(
                     [
-                        prefix.key + unitName,
+                        prefix.key + unit.key,
                         prefix.key + unit.plural,
                         prefix.abbreviation + unit.abbreviation,
                     ],
@@ -102,7 +108,7 @@ function addUnitsToTable(
                 )
             })
         }
-    }
+    })
 }
 
 addUnitsToTable(LENGTH_SINGLE_UNITS, "Length")
