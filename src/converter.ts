@@ -24,46 +24,43 @@ export const SI_PREFIXES: Readonly<Prefix[]> = [
 ]
 
 export type Unit = {
-    key: string
+    names: string[]
     value: number
     zero?: number
     abbreviation: string
-    plural: string
     si?: true
 }
 
 export type UnitTable = Readonly<Array<Unit>>
 
 export const LENGTH_SINGLE_UNITS: UnitTable = [
-    { key: "meter", value: 1, abbreviation: "m", plural: "meters", si: true },
-    { key: "inch", value: 0.0254, abbreviation: "in", plural: "inches" },
-    { key: "foot", value: 0.3048, abbreviation: "ft", plural: "feet" },
-    { key: "yard", value: 0.9144, abbreviation: "yd", plural: "yards" },
-    { key: "mile", value: 1609.344, abbreviation: "mi", plural: "miles" },
+    { names: ["meter", "meters"], value: 1, abbreviation: "m", si: true },
+    { names: ["inch", "inches"], value: 0.0254, abbreviation: "in" },
+    { names: ["foot", "feet"], value: 0.3048, abbreviation: "ft" },
+    { names: ["yard", "yards"], value: 0.9144, abbreviation: "yd" },
+    { names: ["mile", "miles"], value: 1609.344, abbreviation: "mi" },
 ]
 // 1 pound = 453.59237 grams
 export const MASS_SINGLE_UNITS: UnitTable = [
-    { key: "gram", value: 1, abbreviation: "g", plural: "grams", si: true },
-    { key: "ounce", value: 28.3495231, abbreviation: "oz", plural: "ounces" },
-    { key: "pound", value: 453.59237, abbreviation: "lb", plural: "pounds" },
-    { key: "ton", value: 907184.74, abbreviation: "t", plural: "tons" },
+    { names: ["gram", "grams"], value: 1, abbreviation: "g", si: true },
+    { names: ["ounce", "ounces"], value: 28.3495231, abbreviation: "oz" },
+    { names: ["pound", "pounds"], value: 453.59237, abbreviation: "lb" },
+    { names: ["ton", "tons"], value: 907184.74, abbreviation: "t" },
 ]
 
 export const TEMP_SINGLE_UNITS: UnitTable = [
-    { key: "kelvin", value: 1, abbreviation: "K", plural: "K" },
+    { names: ["kelvin"], value: 1, abbreviation: "K" },
     {
-        key: "celsius",
+        names: ["celsius"],
         value: 1,
         zero: -273.15,
         abbreviation: "C",
-        plural: "°C",
     },
     {
-        key: "fahrenheit",
+        names: ["fahrenheit"],
         value: 5 / 9,
         zero: -459.67,
         abbreviation: "F",
-        plural: "°F",
     },
 ]
 
@@ -88,18 +85,13 @@ function setMultipleKeys(
 
 function addUnitsToTable(units: UnitTable, quantity: string) {
     units.forEach((unit) => {
-        setMultipleKeys(
-            [unit.key, unit.plural, unit.abbreviation],
-            unit,
-            quantity
-        )
+        setMultipleKeys([...unit.names, unit.abbreviation], unit, quantity)
 
         if (unit.si) {
             SI_PREFIXES.forEach((prefix) => {
                 setMultipleKeys(
                     [
-                        prefix.key + unit.key,
-                        prefix.key + unit.plural,
+                        ...unit.names.map((key) => prefix.key + key),
                         prefix.abbreviation + unit.abbreviation,
                     ],
                     unit,
