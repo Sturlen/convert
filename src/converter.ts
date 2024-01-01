@@ -27,40 +27,40 @@ export type Unit = {
     names: string[]
     value: number
     zero?: number
-    abbreviation: string
+    abbrs: string[]
     si?: true
 }
 
 export type UnitTable = Readonly<Array<Unit>>
 
 export const LENGTH_SINGLE_UNITS: UnitTable = [
-    { names: ["meter", "meters"], value: 1, abbreviation: "m", si: true },
-    { names: ["inch", "inches"], value: 0.0254, abbreviation: "in" },
-    { names: ["foot", "feet"], value: 0.3048, abbreviation: "ft" },
-    { names: ["yard", "yards"], value: 0.9144, abbreviation: "yd" },
-    { names: ["mile", "miles"], value: 1609.344, abbreviation: "mi" },
+    { names: ["meter", "meters"], value: 1, abbrs: ["m"], si: true },
+    { names: ["inch", "inches"], value: 0.0254, abbrs: ["in"] },
+    { names: ["foot", "feet"], value: 0.3048, abbrs: ["ft"] },
+    { names: ["yard", "yards"], value: 0.9144, abbrs: ["yd"] },
+    { names: ["mile", "miles"], value: 1609.344, abbrs: ["mi"] },
 ]
 // 1 pound = 453.59237 grams
 export const MASS_SINGLE_UNITS: UnitTable = [
-    { names: ["gram", "grams"], value: 1, abbreviation: "g", si: true },
-    { names: ["ounce", "ounces"], value: 28.3495231, abbreviation: "oz" },
-    { names: ["pound", "pounds"], value: 453.59237, abbreviation: "lb" },
-    { names: ["ton", "tons"], value: 907184.74, abbreviation: "t" },
+    { names: ["gram", "grams"], value: 1, abbrs: ["g"], si: true },
+    { names: ["ounce", "ounces"], value: 28.3495231, abbrs: ["oz"] },
+    { names: ["pound", "pounds"], value: 453.59237, abbrs: ["lb", "lbs"] },
+    { names: ["ton", "tons"], value: 907184.74, abbrs: ["t"] },
 ]
 
 export const TEMP_SINGLE_UNITS: UnitTable = [
-    { names: ["kelvin"], value: 1, abbreviation: "K" },
+    { names: ["kelvin"], value: 1, abbrs: ["K"] },
     {
         names: ["celsius"],
         value: 1,
         zero: -273.15,
-        abbreviation: "C",
+        abbrs: ["C"],
     },
     {
         names: ["fahrenheit"],
         value: 5 / 9,
         zero: -459.67,
-        abbreviation: "F",
+        abbrs: ["F"],
     },
 ]
 
@@ -85,14 +85,14 @@ function setMultipleKeys(
 
 function addUnitsToTable(units: UnitTable, quantity: string) {
     units.forEach((unit) => {
-        setMultipleKeys([...unit.names, unit.abbreviation], unit, quantity)
+        setMultipleKeys([...unit.names, ...unit.abbrs], unit, quantity)
 
         if (unit.si) {
             SI_PREFIXES.forEach((prefix) => {
                 setMultipleKeys(
                     [
-                        ...unit.names.map((key) => prefix.key + key),
-                        prefix.abbreviation + unit.abbreviation,
+                        ...unit.names.map((name) => prefix.key + name),
+                        ...unit.abbrs.map((abbr) => prefix.abbreviation + abbr),
                     ],
                     unit,
                     quantity,
