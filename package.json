@@ -17,7 +17,8 @@
         "build:watch": "tsup src/index.ts --format cjs,esm --clean --watch",
         "test": "jest",
         "prepublish": "pnpm run build",
-        "pub": "pnpm publish --access public"
+        "pub": "pnpm publish --access public",
+        "release": "release-it"
     },
     "keywords": [
         "units",
@@ -30,13 +31,13 @@
     ],
     "license": "MIT",
     "repository": "https://github.com/Sturlen/convert/",
-    "dependencies": {},
     "devDependencies": {
-        "tsup": "^8.0.1",
         "@types/jest": "^29.5.11",
         "@types/node": "^20.10.4",
         "jest": "^29.7.0",
+        "release-it": "^17.0.1",
         "ts-jest": "^29.1.1",
+        "tsup": "^8.0.1",
         "typescript": "^5.3.3"
     }
 }
