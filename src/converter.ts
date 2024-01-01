@@ -1,27 +1,27 @@
 export type Prefix = { value: number; abbreviation: string; key: string }
 
-export const SI_PREFIXES: Readonly<Record<string, Prefix>> = {
-    yotta: { value: 1e24, abbreviation: "Y", key: "yotta" },
-    zetta: { value: 1e21, abbreviation: "Z", key: "zetta" },
-    exa: { value: 1e18, abbreviation: "E", key: "exa" },
-    peta: { value: 1e15, abbreviation: "P", key: "peta" },
-    tera: { value: 1e12, abbreviation: "T", key: "tera" },
-    giga: { value: 1e9, abbreviation: "G", key: "giga" },
-    mega: { value: 1e6, abbreviation: "M", key: "mega" },
-    kilo: { value: 1e3, abbreviation: "k", key: "kilo" },
-    hecto: { value: 1e2, abbreviation: "h", key: "hecto" },
-    deca: { value: 1e1, abbreviation: "da", key: "deca" },
-    deci: { value: 1e-1, abbreviation: "d", key: "deci" },
-    centi: { value: 1e-2, abbreviation: "c", key: "centi" },
-    milli: { value: 1e-3, abbreviation: "m", key: "milli" },
-    micro: { value: 1e-6, abbreviation: "µ", key: "micro" },
-    nano: { value: 1e-9, abbreviation: "n", key: "nano" },
-    pico: { value: 1e-12, abbreviation: "p", key: "pico" },
-    femto: { value: 1e-15, abbreviation: "f", key: "femto" },
-    atto: { value: 1e-18, abbreviation: "a", key: "atto" },
-    zepto: { value: 1e-21, abbreviation: "z", key: "zepto" },
-    yocto: { value: 1e-24, abbreviation: "y", key: "yocto" },
-} as const
+export const SI_PREFIXES: Readonly<Prefix[]> = [
+    { value: 1e24, abbreviation: "Y", key: "yotta" },
+    { value: 1e21, abbreviation: "Z", key: "zetta" },
+    { value: 1e18, abbreviation: "E", key: "exa" },
+    { value: 1e15, abbreviation: "P", key: "peta" },
+    { value: 1e12, abbreviation: "T", key: "tera" },
+    { value: 1e9, abbreviation: "G", key: "giga" },
+    { value: 1e6, abbreviation: "M", key: "mega" },
+    { value: 1e3, abbreviation: "k", key: "kilo" },
+    { value: 1e2, abbreviation: "h", key: "hecto" },
+    { value: 1e1, abbreviation: "da", key: "deca" },
+    { value: 1e-1, abbreviation: "d", key: "deci" },
+    { value: 1e-2, abbreviation: "c", key: "centi" },
+    { value: 1e-3, abbreviation: "m", key: "milli" },
+    { value: 1e-6, abbreviation: "µ", key: "micro" },
+    { value: 1e-9, abbreviation: "n", key: "nano" },
+    { value: 1e-12, abbreviation: "p", key: "pico" },
+    { value: 1e-15, abbreviation: "f", key: "femto" },
+    { value: 1e-18, abbreviation: "a", key: "atto" },
+    { value: 1e-21, abbreviation: "z", key: "zepto" },
+    { value: 1e-24, abbreviation: "y", key: "yocto" },
+]
 
 export type Unit = {
     value: number
@@ -89,11 +89,11 @@ function addUnitsToTable(
         )
 
         if (unit.si) {
-            Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
+            SI_PREFIXES.forEach((prefix) => {
                 setMultipleKeys(
                     [
-                        prefixName + unitName,
-                        prefixName + unit.plural,
+                        prefix.key + unitName,
+                        prefix.key + unit.plural,
                         prefix.abbreviation + unit.abbreviation,
                     ],
                     unit,
