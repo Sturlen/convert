@@ -51,3 +51,9 @@ test("fahrenheit", () => {
     expect(convertUnit(0, "celsius", "fahrenheit")).toBeCloseTo(32)
     expect(convertUnit(1, "celsius", "fahrenheit")).toBeCloseTo(33.8)
 })
+
+test("Support first letter uppercase", () => {
+    expect(convertUnit(1, "meter", "Meter")).toBe(1)
+    expect(convertUnit(1, "celsius", "Celsius")).toBe(1)
+    expect(convertUnit(1, "kilogram", "Kilogram")).toBe(1)
+})

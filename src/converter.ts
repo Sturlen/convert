@@ -83,15 +83,26 @@ function setMultipleKeys(
     }
 }
 
+function capitalizeFirst(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 function addUnitsToTable(units: UnitTable, quantity: string) {
     units.forEach((unit) => {
-        setMultipleKeys([...unit.names, ...unit.abbrs], unit, quantity)
+        setMultipleKeys(
+            [...unit.names, ...unit.names.map(capitalizeFirst), ...unit.abbrs],
+            unit,
+            quantity
+        )
 
         if (unit.si) {
             SI_PREFIXES.forEach((prefix) => {
                 setMultipleKeys(
                     [
                         ...unit.names.map((name) => prefix.key + name),
+                        ...unit.names.map((name) =>
+                            capitalizeFirst(prefix.key + name)
+                        ),
                         ...unit.abbrs.map((abbr) => prefix.abbreviation + abbr),
                     ],
                     unit,
