@@ -64,9 +64,14 @@ export const TEMP_SINGLE_UNITS: UnitTable = [
     },
 ]
 
-export type CoreUnit = { factor: number; quantity: string; zero: number }
+export type CoreUnit = {
+    name: string
+    factor: number
+    quantity: string
+    zero: number
+}
 
-export const UNITS_TABLE = new Map<string, CoreUnit>()
+export const UNITS_TABLE: CoreUnit[] = []
 
 function setMultipleKeys(
     keys: string[],
@@ -75,7 +80,8 @@ function setMultipleKeys(
     prefixValue = 1
 ) {
     for (const key of keys) {
-        UNITS_TABLE.set(key, {
+        UNITS_TABLE.push({
+            name: key,
             factor: unit.value * prefixValue,
             zero: unit.zero ?? 0,
             quantity: quantity,
@@ -119,8 +125,8 @@ addUnitsToTable(MASS_SINGLE_UNITS, "Mass")
 addUnitsToTable(TEMP_SINGLE_UNITS, "Temperature")
 
 export function convertUnit(amount: number, from: string, to: string): number {
-    const from_unit = UNITS_TABLE.get(from)
-    const to_unit = UNITS_TABLE.get(to)
+    const from_unit = UNITS_TABLE.find((unit) => unit.name === from)
+    const to_unit = UNITS_TABLE.find((unit) => unit.name === to)
 
     if (from_unit === undefined) {
         throw new Error(`Unknown unit: ${from}`)
