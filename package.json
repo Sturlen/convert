@@ -1,6 +1,6 @@
 {
     "name": "@sturle/convert",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "CLI tool for converting units.",
     "main": "./dist/index.js",
     "type": "module",
