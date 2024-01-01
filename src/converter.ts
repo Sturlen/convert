@@ -62,43 +62,44 @@ export type CoreUnit = { factor: number; quantity: string; zero: number }
 
 export const UNITS_TABLE = new Map<string, CoreUnit>()
 
+function setMultipleKeys(
+    keys: string[],
+    unit: Unit,
+    quantity: string,
+    prefixValue = 1
+) {
+    for (const key of keys) {
+        UNITS_TABLE.set(key, {
+            factor: unit.value * prefixValue,
+            zero: unit.zero ?? 0,
+            quantity: quantity,
+        })
+    }
+}
+
 function addUnitsToTable(
     units: Readonly<Record<string, Unit>>,
     quantity: string
 ) {
     for (const [unitName, unit] of Object.entries(units)) {
-        UNITS_TABLE.set(unitName, {
-            factor: unit.value,
-            zero: unit.zero ?? 0,
-            quantity,
-        })
-        UNITS_TABLE.set(unit.plural, {
-            factor: unit.value,
-            zero: unit.zero ?? 0,
-            quantity,
-        })
-        UNITS_TABLE.set(unit.abbreviation, {
-            factor: unit.value,
-            zero: unit.zero ?? 0,
-            quantity,
-        })
+        setMultipleKeys(
+            [unitName, unit.plural, unit.abbreviation],
+            unit,
+            quantity
+        )
+
         if (unit.si) {
             Object.entries(SI_PREFIXES).forEach(([prefixName, prefix]) => {
-                UNITS_TABLE.set(prefixName + unitName, {
-                    factor: unit.value * prefix.value,
-                    zero: unit.zero ?? 0,
+                setMultipleKeys(
+                    [
+                        prefixName + unitName,
+                        prefixName + unit.plural,
+                        prefix.abbreviation + unit.abbreviation,
+                    ],
+                    unit,
                     quantity,
-                })
-                UNITS_TABLE.set(prefixName + unit.plural, {
-                    factor: unit.value * prefix.value,
-                    zero: unit.zero ?? 0,
-                    quantity,
-                })
-                UNITS_TABLE.set(prefix.abbreviation + unit.abbreviation, {
-                    factor: unit.value * prefix.value,
-                    zero: unit.zero ?? 0,
-                    quantity,
-                })
+                    prefix.value
+                )
             })
         }
     }
