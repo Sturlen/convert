@@ -1,4 +1,4 @@
-#!/bin/env node
+#!/usr/bin/env node
 
 import { exit, stdout } from "process"
 import { convertUnit } from "./converter"
