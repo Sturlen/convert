@@ -10,7 +10,9 @@
             "import": "./dist/index.js"
         }
     },
-    "bin": "dist/index.js",
+    "bin": {
+        "unitconvert": "dist/index.cjs"
+    },
     "scripts": {
         "convert": "node ./dist/index.cjs",
         "build": "tsup src/index.ts --format cjs,esm --clean",
