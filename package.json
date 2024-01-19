@@ -1,5 +1,5 @@
 {
-    "name": "@sturle/convert",
+    "name": "@sturlen/convert",
     "version": "0.0.16",
     "description": "CLI tool for converting units.",
     "main": "./dist/index.js",
