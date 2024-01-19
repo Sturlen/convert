@@ -51,22 +51,22 @@ export const MASS_SINGLE_UNITS: UnitTable = [
 export const TEMP_SINGLE_UNITS: UnitTable = [
     { names: ["kelvin"], value: 1, abbrs: ["K"] },
     {
-        names: ["celsius"],
+        names: ["celsius", "Celsius"],
         value: 1,
         zero: -273.15,
-        abbrs: ["C"],
+        abbrs: ["C", "°C"],
     },
     {
-        names: ["fahrenheit"],
+        names: ["fahrenheit", "Fahrenheit"],
         value: 5 / 9,
         zero: -459.67,
-        abbrs: ["F"],
+        abbrs: ["F", "°F"],
     },
     {
-        names: ["rankine"],
+        names: ["rankine", "Rankine"],
         value: 5 / 9,
         zero: 0,
-        abbrs: ["R"],
+        abbrs: ["R", "Ra", "°R"],
     },
 ]
 
