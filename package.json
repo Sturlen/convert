@@ -16,8 +16,6 @@
         "build": "tsup src/index.ts --format cjs,esm --clean",
         "build:watch": "tsup src/index.ts --format cjs,esm --clean --watch",
         "test": "jest",
-        "prepublish": "pnpm run build",
-        "pub": "pnpm publish --access public",
         "release": "release-it"
     },
     "keywords": [
