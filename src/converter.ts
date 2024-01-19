@@ -62,6 +62,12 @@ export const TEMP_SINGLE_UNITS: UnitTable = [
         zero: -459.67,
         abbrs: ["F"],
     },
+    {
+        names: ["rankine"],
+        value: 5 / 9,
+        zero: 0,
+        abbrs: ["R"],
+    },
 ]
 
 export type CoreUnit = {

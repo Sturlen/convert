@@ -57,3 +57,13 @@ test("Support first letter uppercase", () => {
     expect(convertUnit(1, "celsius", "Celsius")).toBe(1)
     expect(convertUnit(1, "kilogram", "Kilogram")).toBe(1)
 })
+
+// https://en.wikipedia.org/wiki/Rankine_scale
+test("rankine", () => {
+    expect(convertUnit(0, "kelvin", "rankine")).toBeCloseTo(0)
+    expect(convertUnit(255.37, "kelvin", "rankine")).toBeCloseTo(459.67)
+    expect(convertUnit(0, "celsius", "rankine")).toBeCloseTo(491.67)
+    expect(convertUnit(99.9839, "celsius", "rankine")).toBeCloseTo(671.64102)
+})
+
+// TODO: Find a better and more standardized way to test units

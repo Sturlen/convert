@@ -60,6 +60,7 @@ All SI-units support the following prefixes:
 - kelvin
 - celsius
 - fahrenheit
+- rankin
 
 # Todo
 - More quantities
